@@ -1,0 +1,67 @@
+<div class="container">
+	<h1>Welcome <%= @user.alias %></h1>
+	<div>
+			<% if flash[:secrets_errors] %>
+				<% flash[:secrets_errors].each do |error| %>
+					<p class="error"><%= error %></p>
+				<% end %>
+			<% end %>
+	</div>
+	<div class="row">
+		<form lass="col l8 " action="/secrets" method="post">
+			<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+			<div class="row">
+				<div class="input-field col l8">
+			      		 <i class="material-icons prefix">mode_edit</i>
+				          <label for="content">New Secret</label>
+				          <textarea id="content" class="materialize-textarea" name="secret[content]"></textarea>
+				</div>
+			</div>
+
+			<div class="row">
+		  		<div class="col l8 right-align">
+		        	<button class="btn waves-effect waves-light" type="submit" >Create Secret<i class="material-icons right">send</i>
+		  			</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="row">
+		<div class="col l6">
+			<h1>Secrets: </h1>
+			<% @user.secrets.each do |secret| %>
+				<div class="divider"></div>
+				<div class="section">
+					<p class="section"> <%=secret.content %></p>
+					<p><%=secret.likes.count %></p>
+					<% if secret.user.id == current_user.id%>
+						<a href="/secrets/<%= secret.id%>" data-method="delete"><button>Delete</button></a>
+					<% end %>
+					<% secret.likes.each do |like|%>
+						<%= like.user %>
+						<% if like.user %>
+							<a href="/secrets/<%= secret.id%>/likes"><button>Like</button></a>
+						<% end %>
+					<% end %>
+				</div>
+			<% end %>
+
+		</div>
+
+		<div class="col l6">
+			<h1>Secrets Liked: </h1>
+			<% @secret_liked.each do |secret| %>
+				<div class="divider"></div>
+				<div class="section">
+					<p> <%=secret.secret.content %></p>
+					<p> Likes: <%=secret.secret.likes.count %></p>
+				</div>
+
+			<% end %>
+
+		</div>
+
+	</div>
+
+</div>
